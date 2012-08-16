@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: jQuery | jQuery Source Analysis]]></title>
-  <link href="http://jquery.j2p.kr/blog/categories/jquery/atom.xml" rel="self"/>
-  <link href="http://jquery.j2p.kr/"/>
-  <updated>2012-08-16T13:25:53+09:00</updated>
-  <id>http://jquery.j2p.kr/</id>
+  <link href="http://jjp5023.github.com/blog/categories/jquery/atom.xml" rel="self"/>
+  <link href="http://jjp5023.github.com/"/>
+  <updated>2012-08-17T01:42:35+09:00</updated>
+  <id>http://jjp5023.github.com/</id>
   <author>
     <name><![CDATA[J2P]]></name>
     
@@ -15,10 +15,22 @@
   
   <entry>
     <title type="html"><![CDATA[Start jQuery Source Analysis]]></title>
-    <link href="http://jquery.j2p.kr/blog/2012/08/16/start-jquery-source-analysis/"/>
+    <link href="http://jjp5023.github.com/blog/2012/08/16/start-jquery-source-analysis/"/>
     <updated>2012-08-16T08:33:00+09:00</updated>
-    <id>http://jquery.j2p.kr/blog/2012/08/16/start-jquery-source-analysis</id>
-    <content type="html"><![CDATA[<p>요번에 jQuery 가 1.8 로 업데이트가 되었다.</p>
+    <id>http://jjp5023.github.com/blog/2012/08/16/start-jquery-source-analysis</id>
+    <content type="html"><![CDATA[<p>요즘 jQuery는 웹 사이트를 만들때 거의 필수적인 라이브러리라고 할 수 있다.</p>
+
+<p>사용방법이 쉽고 편리한 메소드를 많이 지원하기 때문이라고 생각한다.</p>
+
+<p>특히 DOM을 다루는 면에서는 정말 편리한 라이브러리라고 생각한다.</p>
+
+<p>내가 처음 jQuery를 접한것은 2년전 쯤인거 같다.</p>
+
+<p>그때는 회사에서 jQuery는 아무도 쓸 생각도 하지 않았었고 jQuery를 왜 쓰냐는 말을 들었었다.</p>
+
+<p>하지만 지금은 없어서는 안될 라이브러리가 되었다.</p>
+
+<p>현재 jQuery 버전은 1.8 이다.</p>
 
 <p>소스를 보니 이전 소스와 조금 달라진 부분들도 있는거 같고 새로운 마음으로 jQuery 소스를 분석 해볼까 한다.</p>
 
@@ -28,7 +40,13 @@
 
 <p>가능하다면 가까운 미래에는 jQuery 버그도 수정해서 pull request 해보는게 목표이다. ㅋ</p>
 
-<p>그리고 좀더 jQuery 에 대해서 알고 쓰고 싶은 마음에 큰맘 먹고 블로깅을 시작해 볼까 한다.</p>
+<p>그리고 좀더 jQuery에 대해서 정확하게 알고 쓰고 싶은 마음에 큰맘 먹고 블로깅을 시작해 볼까 한다.</p>
+
+<h2>기본구조</h2>
+
+<hr />
+
+<p>먼저 9004줄이나 되는 전체 소스에서 가장 기본적인 구조만 뽑아 보면 다음과 같다.</p>
 
 <p>``` javascript jQuery 기본 구조
 (function( window, undefined ){</p>
@@ -43,7 +61,6 @@
 jQuery.fn = jQuery.prototype = {
     constructor: jQuery,
     init: function( selector, context, rootjQuery ) {
-
         return jQuery.makeArray( selector, this );
     }
 };
@@ -54,12 +71,115 @@ window.jQuery = window.$ = jQuery;
 </code></pre>
 
 <p>}( window ));
-```
-위 소스는 jQuery의 그 많은 소스 들을 삭제 하고 기본 구조만 남겨둔것이다.</p>
+```</p>
 
-<p>처음 부터 살펴보면 간단하게 즉시 호출 함수를 사용해서 인자로는 window를 넘겨주고 있다.</p>
+<h2>즉시 호출 함수</h2>
 
-<p>javascript는 함수 스코프를 가지기 때문에 즉시 호출 함수를 사용함으로 변수들의 overwrite 되는 문제를 해결 할 수 있다.</p>
+<hr />
+
+<p>처음부터 차근차근 살펴보면 즉시 호출 함수를 사용해서 인자로는 window를 넘겨주고 있다.</p>
+
+<p>javascript는 함수 스코프를 가지기 때문에 즉시 호출 함수를 사용함으로</p>
+
+<p>변수들의 overwrite 되는 문제를 해결 할 수 있다.</p>
+
+<p>``` javascript 즉시 호출 함수
+(function( window, undefined ) {</p>
+
+<p>}( window ));
+```</p>
+
+<h2>jQuery 변수 선언</h2>
+
+<hr />
+
+<p>변수 rootjQuery, jQuery 변수를 선언했다.</p>
+
+<p>rootjQuery는 인자로 넘겨주기 위한 변수 인거 같다.</p>
+
+<p>jQuery 변수에는 함수 리터럴을 넣어주고 있다.</p>
+
+<p>jQuery 함수 리터럴을 보면 selector, context 인자로 받고 있다.</p>
+
+<p>또 함수 몸체 안에서는 jQuery.fn.init 함수를 new 생성자로 객체를 생성해서 return 해주고 있다.</p>
+
+<p>결국 jQuery 변수는 jQuery.fn.init 함수가 되는것이다.</p>
+
+<p>``` javascript jQuery 변수
+jQuery = function( selector, context ) {</p>
+
+<pre><code>return new jQuery.fn.init( selector, context, rootjQuery );
+</code></pre>
+
+<p>};
+```</p>
+
+<h2>jQuery.fn.init 함수</h2>
+
+<hr />
+
+<p>여기서 보면 jQuery.fn = jQuery.prototype = {} 을 볼수 있는데</p>
+
+<p>jQuery.fn = jQuery.prototype 은 단순히 jQuery.fn 에 jQuery.prototype을 담는것이다.</p>
+
+<p>이유는 다른곳에서 사용할때 prototype을 다 쓰는것보다</p>
+
+<p>fn 으로 줄여서 쓰기 위함이라 생각한다.</p>
+
+<p>위에서 jQuery 함수 리터럴 안에서  new jQuery.fn.init 을 보았다.</p>
+
+<p>요것은 jQuery.prototype.init 과 똑같은 것이다.</p>
+
+<p>jQuery.prototype 에 constructor(생성자)과 init 메소드가 선언 되었다.</p>
+
+<p>init 메소드 안을 보면 jQuery.makeArray를 return 하고 있다.</p>
+
+<p>이것은 나중에 알아보겠지만 jQuery는 배열로 반환 한다는 것을 알 수 있다.</p>
+
+<p>``` javascript jQuery.fn.init 함수
+jQuery.fn = jQuery.prototype = {</p>
+
+<pre><code>constructor: jQuery,
+init: function( selector, context, rootjQuery ) {
+    return jQuery.makeArray( selector, this );
+}
+</code></pre>
+
+<p>};
+```</p>
+
+<h2>jQuery.fn.init.prototype</h2>
+
+<hr />
+
+<p>이부분은 jQuery.fn.init.prototype 에 jQuery.fn 을 담아서</p>
+
+<p>new 생성자를 통해서 객체를 선언할때</p>
+
+<p>prototype에 있는 메소드를 사용하기 위한것이 아닌가 싶다.
+<code>javascript jQuery.fn.init.prototype
+jQuery.fn.init.prototype = jQuery.fn;
+</code></p>
+
+<h2>전역객체</h2>
+
+<hr />
+
+<p>함수 스코프에 안에서 jQuery를 선언한 상태이기 때문에 외부에서는 jQuery를 접근할 수 없다.</p>
+
+<p>그래서 전역 window에 연결해주므로 어디서든 쓸수 있게 해준다.</p>
+
+<p>그래서 우리가 흔히 사용하는 jQuery() 또는 $()처럼 사용할 수 있는것이다.</p>
+
+<p><code>javascript jQuery window 연결
+window.jQuery = window.$ = jQuery;
+</code></p>
+
+<h2>Next</h2>
+
+<hr />
+
+<p>다음에는 jQuery.fn.init 안에서 어떤 일들이 일어나는지 알아보자.</p>
 ]]></content>
   </entry>
   
