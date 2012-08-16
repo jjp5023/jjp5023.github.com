@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[jQuery Source Analysis]]></title>
+  <link href="http://jquery.j2p.kr/atom.xml" rel="self"/>
+  <link href="http://jquery.j2p.kr/"/>
+  <updated>2012-08-16T13:25:53+09:00</updated>
+  <id>http://jquery.j2p.kr/</id>
+  <author>
+    <name><![CDATA[J2P]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Start jQuery Source Analysis]]></title>
+    <link href="http://jquery.j2p.kr/blog/2012/08/16/start-jquery-source-analysis/"/>
+    <updated>2012-08-16T08:33:00+09:00</updated>
+    <id>http://jquery.j2p.kr/blog/2012/08/16/start-jquery-source-analysis</id>
+    <content type="html"><![CDATA[<p>요번에 jQuery 가 1.8 로 업데이트가 되었다.</p>
+
+<p>소스를 보니 이전 소스와 조금 달라진 부분들도 있는거 같고 새로운 마음으로 jQuery 소스를 분석 해볼까 한다.</p>
+
+<p>소스를 분석하는것은 javascript 를 공부하기 위한 수단이라고 생각한다.</p>
+
+<p>jQuery를 통해서 javascript에 전문가들의 많은 것들을 보고 배우고 싶다.</p>
+
+<p>가능하다면 가까운 미래에는 jQuery 버그도 수정해서 pull request 해보는게 목표이다. ㅋ</p>
+
+<p>그리고 좀더 jQuery 에 대해서 알고 쓰고 싶은 마음에 큰맘 먹고 블로깅을 시작해 볼까 한다.</p>
+
+<figure class='code'><figcaption><span>jQuery 기본 구조</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">(</span><span class="kd">function</span><span class="p">(</span> <span class="nb">window</span><span class="p">,</span> <span class="kc">undefined</span> <span class="p">){</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">var</span>
+</span><span class='line'>      <span class="nx">rootjQuery</span><span class="p">,</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nx">jQuery</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">context</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">return</span> <span class="k">new</span> <span class="nx">jQuery</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">init</span><span class="p">(</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">context</span><span class="p">,</span> <span class="nx">rootjQuery</span> <span class="p">);</span>
+</span><span class='line'>      <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">jQuery</span><span class="p">.</span><span class="nx">fn</span> <span class="o">=</span> <span class="nx">jQuery</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">constructor</span><span class="o">:</span> <span class="nx">jQuery</span><span class="p">,</span>
+</span><span class='line'>      <span class="nx">init</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">context</span><span class="p">,</span> <span class="nx">rootjQuery</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>          <span class="k">return</span> <span class="nx">jQuery</span><span class="p">.</span><span class="nx">makeArray</span><span class="p">(</span> <span class="nx">selector</span><span class="p">,</span> <span class="k">this</span> <span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">jQuery</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">init</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="nx">jQuery</span><span class="p">.</span><span class="nx">fn</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nb">window</span><span class="p">.</span><span class="nx">jQuery</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">$</span> <span class="o">=</span> <span class="nx">jQuery</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}(</span> <span class="nb">window</span> <span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>위 소스는 jQuery의 그 많은 소스 들을 삭제 하고 기본 구조만 남겨둔것이다.</p>
+
+<p>처음 부터 살펴보면 간단하게 즉시 호출 함수를 사용해서 인자로는 window를 넘겨주고 있다.</p>
+
+<p>javascript는 함수 스코프를 가지기 때문에 즉시 호출 함수를 사용함으로 변수들의 overwrite 되는 문제를 해결 할 수 있다.</p>
+]]></content>
+  </entry>
+  
+</feed>

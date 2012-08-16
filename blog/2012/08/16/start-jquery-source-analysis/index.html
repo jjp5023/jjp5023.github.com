@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>jQuery Source Analysis</title>
+  <title>Start jQuery Source Analysis - jQuery Source Analysis</title>
   <meta name="author" content="J2P">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://jquery.j2p.kr">
+  <link rel="canonical" href="http://jquery.j2p.kr/blog/2012/08/16/start-jquery-source-analysis">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -101,15 +101,13 @@
 </nav>
   <div class="container">
     <div class="row-fluid">
-      <div class="span9">
-  
-  
-  
-    <article>
       
+<article class="hentry span9" role="article">
+
+  
   <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2012/08/16/start-jquery-source-analysis/">Start jQuery Source Analysis</a></h1>
+      <h1 class="entry-title">Start jQuery Source Analysis</h1>
     
     
       <p class="meta">
@@ -127,14 +125,14 @@
 
 <time datetime="2012-08-16T08:33:00+09:00" pubdate data-updated="true">Aug 16<span>th</span>, 2012</time>
         
-         | <a href="/blog/2012/08/16/start-jquery-source-analysis/#disqus_thread">Comments</a>
+         | <a href="#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>요번에 jQuery 가 1.8 로 업데이트가 되었다.</p>
+<div class="entry-content"><p>요번에 jQuery 가 1.8 로 업데이트가 되었다.</p>
 
 <p>소스를 보니 이전 소스와 조금 달라진 부분들도 있는거 같고 새로운 마음으로 jQuery 소스를 분석 해볼까 한다.</p>
 
@@ -199,18 +197,67 @@
 
 <p>javascript는 함수 스코프를 가지기 때문에 즉시 호출 함수를 사용함으로 변수들의 overwrite 되는 문제를 해결 할 수 있다.</p>
 </div>
+
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">J2P</span></span>
+
+      
+
+
+
+
+
+
+
+
   
 
 
-    </article>
+<time datetime="2012-08-16T08:33:00+09:00" pubdate data-updated="true">Aug 16<span>th</span>, 2012</time>
+      
+
+<span class="categories">
   
-  <ul class="pager">
+    <a class='category' href='/blog/categories/jquery/'>jQuery</a>
+  
+</span>
+
+
+    </p>
     
-    <li><a href="/blog/archives">Blog Archives</a></li>
-    
-  </ul>
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jquery.j2p.kr/blog/2012/08/16/start-jquery-source-analysis/" data-via="" data-counturl="http://jquery.j2p.kr/blog/2012/08/16/start-jquery-source-analysis/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
 </div>
+
+    
+    
+    <section>
+      <h1>Comments</h1>
+      <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </section>
+    
+    <ul class="pager">
+      
+      <li><a href="/blog/archives">Blog Archives</a></li>
+      
+    </ul>
+  </footer>
+</article>
+
 <aside class="sidebar-nav span3">
   
     <section class="well">
@@ -232,6 +279,7 @@
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo" class="page-footer"><hr>
@@ -247,7 +295,10 @@
       var disqus_shortname = 'jqueryanalysis';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://jquery.j2p.kr/blog/2012/08/16/start-jquery-source-analysis/';
+        var disqus_url = 'http://jquery.j2p.kr/blog/2012/08/16/start-jquery-source-analysis/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
