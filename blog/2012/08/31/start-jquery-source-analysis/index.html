@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://jjp5023.github.com/blog/2012/08/16/start-jquery-source-analysis">
+  <link rel="canonical" href="http://jjp5023.github.com/blog/2012/08/31/start-jquery-source-analysis">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -123,7 +123,7 @@
   
 
 
-<time datetime="2012-08-16T08:33:00+09:00" pubdate data-updated="true">Aug 16<span>th</span>, 2012</time>
+<time datetime="2012-08-31T08:33:00+09:00" pubdate data-updated="true">Aug 31<span>st</span>, 2012</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -144,23 +144,21 @@
 
 <p>하지만 지금은 없어서는 안될 라이브러리가 되었다.</p>
 
-<p>현재 jQuery 버전은 1.8 이다.</p>
+<p>현재 jQuery 버전은 1.8.1 이다.</p>
 
 <p>소스를 보니 이전 소스와 조금 달라진 부분들도 있는거 같고 새로운 마음으로 jQuery 소스를 분석 해볼까 한다.</p>
 
 <p>소스를 분석하는것은 javascript 를 공부하기 위한 수단이라고 생각한다.</p>
 
-<p>jQuery를 통해서 javascript에 전문가들의 많은 것들을 보고 배우고 싶다.</p>
+<p>jQuery를 통해서 javascript에 전문가들이 어떻게 코딩을 했는지 어떤 방법들을 썼는지 보고 배우고 싶다.</p>
 
 <p>가능하다면 가까운 미래에는 jQuery 버그도 수정해서 pull request 해보는게 목표이다. ㅋ</p>
 
 <p>그리고 좀더 jQuery에 대해서 정확하게 알고 쓰고 싶은 마음에 큰맘 먹고 블로깅을 시작해 볼까 한다.</p>
 
-<h2>기본구조</h2>
-
 <hr />
 
-<p>먼저 9004줄이나 되는 전체 소스에서 가장 기본적인 구조만 뽑아 보면 다음과 같다.</p>
+<h2>기본구조</h2>
 
 <figure class='code'><figcaption><span>jQuery 기본 구조</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -207,15 +205,27 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h2>즉시 호출 함수</h2>
+<p>javascript 에는 object, function, string, number 등&#8230;</p>
+
+<p>전역 객체가 있는데 이 객체 들은 기본적인 메소드를 가지고 있다.</p>
+
+<p>그래서 우리가 string, number, function 객체들을 만들면 그 메소드들을 사용할 수 있다.</p>
+
+<p>내 나름 대로 내린 결론은 jQuery도 javascript에서 기본적인 객체형 외에 새로운 형을 만든 것이라고 생각한다.</p>
+
+<p>즉, jQuery형이 생긴 것이다.</p>
+
+<p>그래서 jQuery형이 되면 jQuery에서 주어진 메소드들을 사용할 수 있는것이다.</p>
+
+<p>이제 소스를 보면서 천천히 구조에 대해서 알아 보자.</p>
+
+<p>먼저 9047줄이나 되는 전체 소스에서 가장 기본적인 구조만 살펴볼까 한다.</p>
+
+<p>기본 구조외에 소스들을 지워 보면 다음과 같은 소스가 남는다.</p>
 
 <hr />
 
-<p>처음부터 차근차근 살펴보면 즉시 호출 함수를 사용해서 인자로는 window를 넘겨주고 있다.</p>
-
-<p>javascript는 함수 스코프를 가지기 때문에 즉시 호출 함수를 사용함으로</p>
-
-<p>변수들의 overwrite 되는 문제를 해결 할 수 있다.</p>
+<h2>즉시 호출 함수</h2>
 
 <figure class='code'><figcaption><span>즉시 호출 함수</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -226,52 +236,52 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h2>jQuery 변수 선언</h2>
+<p>전체적인 소스를 감싸고 있는 것은 즉시 호출 함수를 사용한다.</p>
+
+<p>보통 라이브러리 들이 이런 형태로 많이 작성되고 있다.</p>
+
+<p>만약 함수 스코프로 감싸지 않는 다면 jQuery 에서 사용된 변수들은 다른 개발자들이 사용할때</p>
+
+<p>변수, 함수들의 overwrite 되는 문제가 발생하게 될 것이다.</p>
+
+<p>인자로 window를 넘겨 받아서 전역 객체에 바로 접근하지 않고 함수 내에서 접근 하기 때문에</p>
+
+<p>속도 향상에 도움을 준다고 생각한다.</p>
 
 <hr />
 
-<p>변수 rootjQuery, jQuery 변수를 선언했다.</p>
+<h2>jQuery 변수 선언</h2>
 
-<p>rootjQuery는 인자로 넘겨주기 위한 변수 인거 같다.</p>
+<figure class='code'><figcaption><span>jQuery 변수</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span>
+</span><span class='line'>  <span class="nx">rootjQuery</span><span class="p">,</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">jQuery</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">context</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="k">new</span> <span class="nx">jQuery</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">init</span><span class="p">(</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">context</span><span class="p">,</span> <span class="nx">rootjQuery</span> <span class="p">);</span>
+</span><span class='line'>  <span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>rootjQuery, jQuery 변수를 선언했다.</p>
+
+<p>rootjQuery 변수는 인자로 넘겨주기 위한 변수 인거 같다.</p>
 
 <p>jQuery 변수에는 함수 리터럴을 넣어주고 있다.</p>
 
 <p>jQuery 함수 리터럴을 보면 selector, context 인자로 받고 있다.</p>
 
-<p>또 함수 몸체 안에서는 jQuery.fn.init 함수를 new 생성자로 객체를 생성해서 return 해주고 있다.</p>
+<p>또 함수 몸체 안에서는 jQuery.fn.init 함수를 new 연산자를 통해서 새로운 객체를 생성해서 return 해주고 있다.</p>
 
-<p>결국 jQuery 변수는 jQuery.fn.init 함수가 되는것이다.</p>
-
-<figure class='code'><figcaption><span>jQuery 변수</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">jQuery</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">context</span> <span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="k">return</span> <span class="k">new</span> <span class="nx">jQuery</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">init</span><span class="p">(</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">context</span><span class="p">,</span> <span class="nx">rootjQuery</span> <span class="p">);</span>
-</span><span class='line'><span class="p">};</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>jQuery.fn.init 함수</h2>
+<p>결국 jQuery는 jQuery.fn.init 함수가 되는 것이다.</p>
 
 <hr />
 
-<p>여기서 보면 jQuery.fn = jQuery.prototype = {} 을 볼수 있는데</p>
-
-<p>jQuery.fn = jQuery.prototype 은 단순히 jQuery.fn 에 jQuery.prototype을 담는것이다.</p>
-
-<p>이유는 다른곳에서 사용할때 prototype을 다 쓰는것보다</p>
-
-<p>fn 으로 줄여서 쓰기 위함이라 생각한다.</p>
-
-<p>위에서 jQuery 함수 리터럴 안에서  new jQuery.fn.init 을 보았다.</p>
-
-<p>요것은 jQuery.prototype.init 과 똑같은 것이다.</p>
-
-<p>jQuery.prototype 에 constructor(생성자)과 init 메소드가 선언 되었다.</p>
-
-<p>init 메소드 안을 보면 jQuery.makeArray를 return 하고 있다.</p>
-
-<p>이것은 나중에 알아보겠지만 jQuery는 배열로 반환 한다는 것을 알 수 있다.</p>
+<h2>jQuery.fn.init 함수</h2>
 
 <figure class='code'><figcaption><span>jQuery.fn.init 함수</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -288,41 +298,49 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h2>jQuery.fn.init.prototype</h2>
+<p>jQuery.fn = jQuery.prototype = {} 을 볼수 있는데</p>
+
+<p>단순히 prototype을 fn이라는 별칭으로 쓰기 위한것이다.</p>
+
+<p>jQuery.prototype 에 constructor(생성자)과 init 메소드가 선언 되었다.</p>
+
+<p>위에서 jQuery 함수 리터럴 안에서  new jQuery.fn.init 을 보았다.</p>
+
+<p>jQuery.fn.init이 바로 jQuery.prototype.init과 똑같은 것이다.</p>
+
+<p>init 메소드 안을 보면 jQuery.makeArray를 return 하고 있다.</p>
+
+<p>jQuery는 최종적으로는 값을 배열로 반환 한다는 것을 알 수 있다.</p>
 
 <hr />
 
-<p>이부분은 jQuery.fn.init.prototype 에 jQuery.fn 을 담아서</p>
-
-<p>new 생성자를 통해서 객체를 선언할때</p>
-
-<p>prototype에 있는 메소드를 사용하기 위한것이 아닌가 싶다.</p>
+<h2>jQuery.fn.init.prototype</h2>
 
 <figure class='code'><figcaption><span>jQuery.fn.init.prototype</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">jQuery</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">init</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="nx">jQuery</span><span class="p">.</span><span class="nx">fn</span><span class="p">;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h2>전역객체</h2>
+<p>이부분은 jQuery.fn.init.prototype 에 jQuery.fn 에 있는 메소드들을 담아서</p>
+
+<p>new 생성자를 통해서 jQuery.fn.init을 호출하게 되면 prototype에 선언된 함수들을</p>
+
+<p>생성된 객체에서 쓸수 있게 하기위한 것이다.</p>
 
 <hr />
 
-<p>함수 스코프에 안에서 jQuery를 선언한 상태이기 때문에 외부에서는 jQuery를 접근할 수 없다.</p>
-
-<p>그래서 전역 window에 연결해주므로 어디서든 쓸수 있게 해준다.</p>
-
-<p>그래서 우리가 흔히 사용하는 jQuery() 또는 $()처럼 사용할 수 있는것이다.</p>
+<h2>전역객체</h2>
 
 <figure class='code'><figcaption><span>jQuery window 연결</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nb">window</span><span class="p">.</span><span class="nx">jQuery</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">$</span> <span class="o">=</span> <span class="nx">jQuery</span><span class="p">;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h2>Next</h2>
+<p>함수 스코프 안에서 jQuery를 선언한 상태이기 때문에 전역에서는 jQuery에 접근할 수 없다.</p>
 
-<hr />
+<p>그래서 window에 연결해주므로 전역에서 쓸수 있게 해준다.</p>
 
-<p>다음에는 jQuery.fn.init 안에서 어떤 일들이 일어나는지 알아보자.</p>
+<p>그래서 우리가 흔히 사용하는 jQuery() 또는 $()처럼 사용할 수 있는것이다.</p>
 </div>
 
 
@@ -345,7 +363,7 @@
   
 
 
-<time datetime="2012-08-16T08:33:00+09:00" pubdate data-updated="true">Aug 16<span>th</span>, 2012</time>
+<time datetime="2012-08-31T08:33:00+09:00" pubdate data-updated="true">Aug 31<span>st</span>, 2012</time>
       
 
 <span class="categories">
@@ -359,7 +377,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jjp5023.github.com/blog/2012/08/16/start-jquery-source-analysis/" data-via="" data-counturl="http://jjp5023.github.com/blog/2012/08/16/start-jquery-source-analysis/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jjp5023.github.com/blog/2012/08/31/start-jquery-source-analysis/" data-via="" data-counturl="http://jjp5023.github.com/blog/2012/08/31/start-jquery-source-analysis/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -392,7 +410,7 @@
     <li class="nav-header">Recent Posts</li>
     
       <li class="post">
-        <a href="/blog/2012/08/16/start-jquery-source-analysis/">Start jQuery Source Analysis</a>
+        <a href="/blog/2012/08/31/start-jquery-source-analysis/">Start jQuery Source Analysis</a>
       </li>
     
   </ul>
@@ -423,8 +441,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://jjp5023.github.com/blog/2012/08/16/start-jquery-source-analysis/';
-        var disqus_url = 'http://jjp5023.github.com/blog/2012/08/16/start-jquery-source-analysis/';
+        var disqus_identifier = 'http://jjp5023.github.com/blog/2012/08/31/start-jquery-source-analysis/';
+        var disqus_url = 'http://jjp5023.github.com/blog/2012/08/31/start-jquery-source-analysis/';
         var disqus_script = 'embed.js';
       
     (function () {
